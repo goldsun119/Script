@@ -6,6 +6,7 @@ from tkinter import ttk
 import tkinter.messagebox
 from xml.dom.minidom import parse, parseString
 g_Tk = Tk()
+g_Tk.title("고속도로 주유소 정보 조회")
 g_Tk.geometry("500x700+750+200")
 DataList = []
 
@@ -15,12 +16,12 @@ def InitTopText():
     MainText.place(x=80)
 
 def InitRouteBox():
-    global RouteBox,routeIndex,str
+    global RouteBox,routeIndex,str2
 
 
     ListBoxScrollbar = Scrollbar(g_Tk)
-    ListBoxScrollbar.place(x=210, y=80)
-    # str = StringVar()
+    ListBoxScrollbar.place(x=210, y=120)
+    # str2 = StringVar()
 
     TempFont = font.Font(g_Tk, size=15, weight='bold', family='Consolas')
     RouteBox = Listbox(g_Tk, font=TempFont, activestyle='none', width=15, height=5, borderwidth=7, relief='ridge', \
@@ -70,98 +71,108 @@ def InitRouteBox():
     RouteBox.pack()
     RouteBox.place(x=25, y=80)
     ListBoxScrollbar.config(command=RouteBox.yview)
-routeIndex = 0
+
+    b = Button(text="->", command=Button_Click)
+    b.place(x=220,y=50)
+
+def Button_Click():
+    global r, str
+    r = RouteBox.curselection()
+    print(r)
+    InitDirec()
 
 def InitDirec():
-    global RouteBox,routeIndex,str
+    global RouteBox,str, r
 
     str = StringVar()
 
+    routeIndex = RouteBox.curselection()
     direction = ttk.Combobox(textvariable=str, width=20)
-    direction['value'] = ('인천','서울')
-    # if routeIndex == 1:
-    #     direction['value'] = ('광주','대구')
-    # elif routeIndex == 2:
-    #     direction['value'] = ('부산', '서울')
-    # elif routeIndex == 3:
-    #     direction['value'] = ('고창', '담양')
-    # elif routeIndex == 4:
-    #     direction['value'] = ('순천', '부산')
-    # elif routeIndex == 5:
-    #     direction['value'] = ('당진', '유성')
-    # elif routeIndex == 6:
-    #     direction['value'] = ('부산', '대구')
-    # elif routeIndex == 7:
-    #     direction['value'] = ('대구', '포항')
-    # elif routeIndex == 8:
-    #     direction['value'] = ('동해', '속초')
-    # elif routeIndex == 9:
-    #     direction['value'] = ('무안', '광주')
-    # elif routeIndex == 10:
-    #     direction['value'] = ('부산', '울산')
-    # elif routeIndex == 11:
-    #     direction['value'] = ('서울','양양')
-    # elif routeIndex == 12:
-    #     direction['value'] = ('목포', '서울')
-    # elif routeIndex == 13:
-    #     direction['value'] = ('광양', '전주')
-    # elif routeIndex == 14:
-    #     direction['value'] = ('인천', '강릉')
-    # elif routeIndex == 15:
-    #     direction['value'] = ('언양', '울산')
-    # elif routeIndex == 16:
-    #     direction['value'] = ('익산', '장수')
-    # elif routeIndex == 17:
-    #     direction['value'] = ('이천', '하남')
-    # elif routeIndex == 18:
-    #     direction['value'] = ('남이', '하남')
-    # elif routeIndex == 19:
-    #     direction['value'] = ('통영', '대전')
-    # elif routeIndex == 20:
-    #     direction['value'] = ('마산','양평')
-    # elif routeIndex == 21:
-    #     direction['value'] = ('부산', '춘천')
-    # elif routeIndex == 22:
-    #     direction['value'] = ('논산', '천안')
-    # elif routeIndex == 23:
-    #     direction['value'] = ('청원', '상주')
-    # elif routeIndex == 24:
-    #     direction['value'] = ('서평택', '군자')
-    # elif routeIndex == 25:
-    #     direction['value'] = ('서평택', '제천')
-    # elif routeIndex == 26:
-    #     direction['value'] = ('오성', '안녕')
-    # elif routeIndex == 27:
-    #     direction['value'] = ('순천', '논산')
-    # elif routeIndex == 28:
-    #     direction['value'] = ('인천', '서울')
-    # elif routeIndex == 29:
-    #     direction['value'] = ('산인', '창원')
-    # elif routeIndex == 30:
-    #     direction['value'] = ('냉정', '부산')
-    # elif routeIndex == 31:
-    #     direction['value'] = ('서대전', '비룡')
-    # elif routeIndex == 32:
-    #     direction['value'] = ('동탄', '봉담')
-    # elif routeIndex == 33:
-    #     direction['value'] = ('판교-일산', '판교-구리')
-    # elif routeIndex == 34:
-    #     direction['value'] = ('동서천', '서공주')
-    # elif routeIndex == 35:
-    #     direction['value'] = ('흥덕', '헌릉')
-    # elif routeIndex == 36:
-    #     direction['value'] = ('공항', '북로')
-    # elif routeIndex == 37:
-    #     direction['value'] = ('공항', '학익')
-    # elif routeIndex == 38:
-    #     direction['value'] = ('인천', '안양')
-    # elif routeIndex == 39:
-    #     direction['value'] = ('인천', '시흥')
-    # elif routeIndex == 40:
-    #     direction['value'] = ('현풍', '금호')
-    # elif routeIndex == 41:
-    #     direction['value'] = ('논산', '회덕')
-    direction.place(x=245,y=80)
+    if 0 in routeIndex:
+        direction['value'] = ('광주','대구')
+    elif 1 in routeIndex:
+        direction['value'] = ('부산', '서울')
+    elif 2 in routeIndex:
+        direction['value'] = ('고창', '담양')
+    elif 3 in routeIndex:
+        direction['value'] = ('순천', '부산')
+    elif 4 in routeIndex:
+        direction['value'] = ('당진', '유성')
+    elif 5 in routeIndex :
+        direction['value'] = ('부산', '대구')
+    elif 6 in routeIndex :
+        direction['value'] = ('대구', '포항')
+    elif 7 in routeIndex :
+        direction['value'] = ('동해', '속초')
+    elif 8 in routeIndex :
+        direction['value'] = ('무안', '광주')
+    elif 9 in routeIndex :
+        direction['value'] = ('부산', '울산')
+    elif 10 in routeIndex :
+        direction['value'] = ('서울','양양')
+    elif 11 in routeIndex :
+        direction['value'] = ('목포', '서울')
+    elif 12 in routeIndex :
+        direction['value'] = ('광양', '전주')
+    elif 13 in routeIndex :
+        direction['value'] = ('인천', '강릉')
+    elif 14 in routeIndex :
+        direction['value'] = ('언양', '울산')
+    elif 15 in routeIndex :
+        direction['value'] = ('익산', '장수')
+    elif 16 in routeIndex:
+        direction['value'] = ('이천', '하남')
+    elif 17 in routeIndex :
+        direction['value'] = ('남이', '하남')
+    elif 18 in routeIndex :
+        direction['value'] = ('통영', '대전')
+    elif 19 in routeIndex :
+        direction['value'] = ('마산','양평')
+    elif 20 in routeIndex :
+        direction['value'] = ('부산', '춘천')
+    elif 21 in routeIndex :
+        direction['value'] = ('논산', '천안')
+    elif 22 in routeIndex :
+        direction['value'] = ('청원', '상주')
+    elif 23 in routeIndex :
+        direction['value'] = ('서평택', '군자')
+    elif 24 in routeIndex :
+        direction['value'] = ('서평택', '제천')
+    elif 25 in routeIndex :
+        direction['value'] = ('오성', '안녕')
+    elif 26 in routeIndex :
+        direction['value'] = ('순천', '논산')
+    elif 27 in routeIndex :
+        direction['value'] = ('인천', '서울')
+    elif 28 in routeIndex :
+        direction['value'] = ('산인', '창원')
+    elif 29 in routeIndex :
+        direction['value'] = ('냉정', '부산')
+    elif 30 in routeIndex :
+        direction['value'] = ('서대전', '비룡')
+    elif 31 in routeIndex :
+        direction['value'] = ('동탄', '봉담')
+    elif 32 in routeIndex :
+        direction['value'] = ('판교-일산', '판교-구리')
+    elif 33 in routeIndex :
+        direction['value'] = ('동서천', '서공주')
+    elif 34 in routeIndex :
+        direction['value'] = ('흥덕', '헌릉')
+    elif 35 in routeIndex :
+        direction['value'] = ('공항', '북로')
+    elif 36 in routeIndex :
+        direction['value'] = ('공항', '학익')
+    elif 37 in routeIndex :
+        direction['value'] = ('인천', '안양')
+    elif 38 in routeIndex :
+        direction['value'] = ('인천', '시흥')
+    elif 39 in routeIndex :
+        direction['value'] = ('현풍', '금호')
+    elif 40 in routeIndex :
+        direction['value'] = ('논산', '회덕')
+    direction.current()
+
+    direction.place(x=255,y=80)
 
 def InitInputLabel():
     global routeEn
@@ -180,7 +191,7 @@ def InitInputLabel():
     # direcEn.pack()
 
     route.place(x=80, y=50)
-    direc.place(x=290, y=50)
+    direc.place(x=300, y=50)
     # routeEn.place(x=80, y=180)
     # direcEn.place(x=80, y=120)
 
@@ -249,7 +260,7 @@ def InitButton():
     TempFont = font.Font(g_Tk, size = 12, weight="bold", family='Consolas')
     search = Button(g_Tk, font = TempFont, width = 6, height = 5, text="검색",command = Search)
     search.pack()
-    search.place(x=415, y=95); search["bg"] = "blue"; search["fg"] = "white"
+    search.place(x=435, y=95); search["bg"] = "blue"; search["fg"] = "white"
 
 
 InitRouteBox()

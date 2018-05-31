@@ -7,7 +7,7 @@ import tkinter.messagebox
 from xml.dom.minidom import parse, parseString
 g_Tk = Tk()
 g_Tk.title("고속도로 주유소 정보 조회")
-g_Tk.geometry("500x700+750+200")
+g_Tk.geometry("530x700")
 DataList = []
 
 def InitTopText():

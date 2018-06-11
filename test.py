@@ -209,6 +209,28 @@ def InitInputLabel():
     # routeEn.place(x=80, y=180)
     # direcEn.place(x=80, y=120)
 
+def OrderButton():
+    global order, orderAscend, orderDescend, diesel, gasoline, lpg, oil
+
+    oil =0
+
+    MenuFont = font.Font(g_Tk, size=15, weight='bold', family='Consolas')
+
+    order = Label(g_Tk, font=MenuFont, text="가격순 정렬", fg="green")
+    order.place(x=275, y=115)
+
+    diesel = ttk.Radiobutton(g_Tk, text="디젤", variable=oil, value=0)
+    gasoline = ttk.Radiobutton(g_Tk, text="가솔린", variable=oil, value=1)
+    lpg = ttk.Radiobutton(g_Tk, text="LPG", variable=oil, value=2)
+    diesel.place(x=250, y=145)
+    gasoline.place(x=310, y=145)
+    lpg.place(x=375, y=145)
+
+    orderAscend = Button(g_Tk, width=10, height=2, text="오름차순")
+    orderDescend = Button(g_Tk, width=10, height=2, text="내림차순")
+    orderAscend.place(x=250, y=175)
+    orderDescend.place(x=340, y=175)
+
 decode_key = unquote("aTIaQ2xH3YX61QqRvQYCrHyJtrpYj7Omi1vFIfUCIzM4908KtnLBetjsGy99joagT9qF6OdjJK1qDsoOA6xKpw%3D%3D")
 def Search():
     global str,DataList,RenderText,ClickList
@@ -288,4 +310,5 @@ InitTopText()
 InitInputLabel()
 InitButton()
 InitRenderText()
+OrderButton()
 g_Tk.mainloop()

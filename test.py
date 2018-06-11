@@ -9,6 +9,7 @@ g_Tk = Tk()
 g_Tk.title("고속도로 주유소 정보 조회")
 g_Tk.geometry("530x700")
 DataList = []
+ClickStr = ""
 
 def InitTopText():
     TempFont = font.Font(g_Tk, size = 18, weight='bold', family='Consolas')
@@ -42,31 +43,29 @@ def InitRouteBox():
     RouteBox.insert(14, "영동고속도로")
     RouteBox.insert(15, "울산고속도로")
     RouteBox.insert(16, "익산장수고속도로")
-    RouteBox.insert(17, "제2중부고속도로")
-    RouteBox.insert(18, "중부고속도로")
-    RouteBox.insert(19, "중부(대전통영)고속도로")
-    RouteBox.insert(20, "중부내륙고속도로")
-    RouteBox.insert(21, "중앙고속도로")
-    RouteBox.insert(22, "천안논산고속도로")
-    RouteBox.insert(23, "청원상주고속도로")
-    RouteBox.insert(24, "평택시흥고속도로")
-    RouteBox.insert(25, "평택제천고속도로")
-    RouteBox.insert(26, "평택화성고속도로")
-    RouteBox.insert(27, "호남고속도로")
-    RouteBox.insert(28, "경인선")
-    RouteBox.insert(29, "남해제1지선")
-    RouteBox.insert(30, "남해제2지선")
-    RouteBox.insert(31, "대전남부순환선")
-    RouteBox.insert(32, "봉담동탄선")
-    RouteBox.insert(33, "서울외곽순환선")
-    RouteBox.insert(34, "서천공주선")
-    RouteBox.insert(35, "용인서울선")
-    RouteBox.insert(36, "인천국제공항선")
-    RouteBox.insert(37, "인천대교선")
-    RouteBox.insert(38, "제2경인선")
-    RouteBox.insert(39, "제3경인선")
-    RouteBox.insert(40, "중부내륙지선")
-    RouteBox.insert(41, "호남선지선")
+    RouteBox.insert(17, "중부고속도로(하남-통영)")
+    RouteBox.insert(18, "중부내륙고속도로")
+    RouteBox.insert(19, "중앙고속도로")
+    RouteBox.insert(20, "천안논산고속도로")
+    RouteBox.insert(21, "청원상주고속도로")
+    RouteBox.insert(22, "평택시흥고속도로")
+    RouteBox.insert(23, "평택제천고속도로")
+    RouteBox.insert(24, "평택화성고속도로")
+    RouteBox.insert(25, "호남고속도로")
+    RouteBox.insert(26, "경인선")
+    RouteBox.insert(27, "남해제1지선")
+    RouteBox.insert(28, "남해제2지선")
+    RouteBox.insert(29, "대전남부순환선")
+    RouteBox.insert(30, "봉담동탄선")
+    RouteBox.insert(31, "서울외곽순환선")
+    RouteBox.insert(32, "서천공주선")
+    RouteBox.insert(33, "용인서울선")
+    RouteBox.insert(34, "인천국제공항선")
+    RouteBox.insert(35, "인천대교선")
+    RouteBox.insert(36, "제2경인선")
+    RouteBox.insert(37, "제3경인선")
+    RouteBox.insert(38, "중부내륙지선")
+    RouteBox.insert(39, "호남선지선")
 
     RouteBox.pack()
     RouteBox.place(x=25, y=80)
@@ -82,9 +81,9 @@ def Button_Click():
     InitDirec()
 
 def InitDirec():
-    global RouteBox,str, r
-
+    global RouteBox,str,r,ClickStr
     str = StringVar()
+    ClickStr=""
 
     routeIndex = RouteBox.curselection()
     direction = ttk.Combobox(textvariable=str, width=20)
@@ -92,10 +91,12 @@ def InitDirec():
         direction['value'] = ('광주','대구')
     elif 1 in routeIndex:
         direction['value'] = ('부산', '서울')
+        ClickStr = "경부선"
     elif 2 in routeIndex:
         direction['value'] = ('고창', '담양')
     elif 3 in routeIndex:
         direction['value'] = ('순천', '부산')
+        ClickStr = "남해선"
     elif 4 in routeIndex:
         direction['value'] = ('당진', '유성')
     elif 5 in routeIndex :
@@ -104,72 +105,85 @@ def InitDirec():
         direction['value'] = ('대구', '포항')
     elif 7 in routeIndex :
         direction['value'] = ('동해', '속초')
+        ClickStr = "동해ㆍ울산포항선"
     elif 8 in routeIndex :
         direction['value'] = ('무안', '광주')
+        ClickStr = "무안광주ㆍ광주대구선"
     elif 9 in routeIndex :
         direction['value'] = ('부산', '울산')
     elif 10 in routeIndex :
         direction['value'] = ('서울','양양')
+        ClickStr = "서울양양선"
     elif 11 in routeIndex :
         direction['value'] = ('목포', '서울')
+        ClickStr="서해안선"
     elif 12 in routeIndex :
         direction['value'] = ('광양', '전주')
+        ClickStr="순천완주선"
     elif 13 in routeIndex :
         direction['value'] = ('인천', '강릉')
+        ClickStr="영동선"
     elif 14 in routeIndex :
         direction['value'] = ('언양', '울산')
     elif 15 in routeIndex :
         direction['value'] = ('익산', '장수')
     elif 16 in routeIndex:
-        direction['value'] = ('이천', '하남')
+        direction['value'] = ('통영', '하남')
+        ClickStr="통영대전ㆍ중부선"
     elif 17 in routeIndex :
-        direction['value'] = ('남이', '하남')
-    elif 18 in routeIndex :
-        direction['value'] = ('통영', '대전')
-    elif 19 in routeIndex :
         direction['value'] = ('마산','양평')
-    elif 20 in routeIndex :
+        ClickStr="중부내륙선"
+    elif 18 in routeIndex :
         direction['value'] = ('부산', '춘천')
-    elif 21 in routeIndex :
+        ClickStr="중앙선"
+    elif 19 in routeIndex :
         direction['value'] = ('논산', '천안')
-    elif 22 in routeIndex :
+    elif 20 in routeIndex :
         direction['value'] = ('청원', '상주')
-    elif 23 in routeIndex :
+        ClickStr="당진영덕선"
+    elif 21 in routeIndex :
         direction['value'] = ('서평택', '군자')
-    elif 24 in routeIndex :
-        direction['value'] = ('서평택', '제천')
-    elif 25 in routeIndex :
+    elif 22 in routeIndex :
+        direction['value'] = ('평택', '제천')
+        ClickStr="평택제천선"
+    elif 23 in routeIndex :
         direction['value'] = ('오성', '안녕')
-    elif 26 in routeIndex :
+    elif 24 in routeIndex :
         direction['value'] = ('순천', '논산')
-    elif 27 in routeIndex :
+        ClickStr="호남선"
+    elif 25 in routeIndex :
         direction['value'] = ('인천', '서울')
-    elif 28 in routeIndex :
+
+    elif 26 in routeIndex :
         direction['value'] = ('산인', '창원')
-    elif 29 in routeIndex :
+    elif 27 in routeIndex :
         direction['value'] = ('냉정', '부산')
-    elif 30 in routeIndex :
+        ClickStr="남해제2지선"
+    elif 28 in routeIndex :
         direction['value'] = ('서대전', '비룡')
-    elif 31 in routeIndex :
+    elif 29 in routeIndex :
         direction['value'] = ('동탄', '봉담')
-    elif 32 in routeIndex :
+    elif 30 in routeIndex :
         direction['value'] = ('판교-일산', '판교-구리')
-    elif 33 in routeIndex :
-        direction['value'] = ('동서천', '서공주')
-    elif 34 in routeIndex :
+    elif 31 in routeIndex :
+        direction['value'] = ('서천', '공주')
+        ClickStr="서천공주선"
+    elif 32 in routeIndex :
         direction['value'] = ('흥덕', '헌릉')
-    elif 35 in routeIndex :
+    elif 33 in routeIndex :
         direction['value'] = ('공항', '북로')
-    elif 36 in routeIndex :
+    elif 34 in routeIndex :
         direction['value'] = ('공항', '학익')
-    elif 37 in routeIndex :
+    elif 35 in routeIndex :
         direction['value'] = ('인천', '안양')
-    elif 38 in routeIndex :
+    elif 36 in routeIndex :
         direction['value'] = ('인천', '시흥')
-    elif 39 in routeIndex :
-        direction['value'] = ('현풍', '금호')
-    elif 40 in routeIndex :
+    elif 37 in routeIndex :
+        direction['value'] = ('현풍', '대구')
+        ClickStr="중부내륙선의지선"
+    elif 38 in routeIndex :
         direction['value'] = ('논산', '회덕')
+        ClickStr="호남선의지선"
     direction.current()
 
     direction.place(x=255,y=80)
@@ -197,16 +211,16 @@ def InitInputLabel():
 
 decode_key = unquote("aTIaQ2xH3YX61QqRvQYCrHyJtrpYj7Omi1vFIfUCIzM4908KtnLBetjsGy99joagT9qF6OdjJK1qDsoOA6xKpw%3D%3D")
 def Search():
-    global RouteBox,str,DataList,RenderText
+    global str,DataList,RenderText,ClickList
+
     DataList.clear()
     RenderText.configure(state='normal')
     RenderText.delete(0.0, END)
     print ('codelist_select')
-    selection=RouteBox.curselection()
     direction = str.get()
     # direction = '인천'
     url = 'http://data.ex.co.kr/exopenapi/business/curStateStation'
-    queryParams = '?' + urlencode({ quote_plus('ServiceKey') : decode_key, quote_plus('serviceKey') : '', quote_plus('type') : 'xml', quote_plus('routeName') : '', quote_plus('direction') : direction, quote_plus('numOfRows') : '10', quote_plus('pageNo') : '1' })
+    queryParams = '?' + urlencode({ quote_plus('ServiceKey') : decode_key, quote_plus('serviceKey') : '', quote_plus('type') : 'xml', quote_plus('routeName') : '', quote_plus('direction') : direction, quote_plus('numOfRows') : '30', quote_plus('pageNo') : '1' })
     request = Request(url + queryParams)
 
     response = urlopen(request)
@@ -221,24 +235,29 @@ def Search():
             if item.nodeName == "list":
                 subitems = item.childNodes
                 #1,2,3 - 디젤,가솔린,lpg 가격 ,
-                DataList.append((subitems[1].firstChild.nodeValue,subitems[2].firstChild.nodeValue,subitems[3].firstChild.nodeValue, subitems[9].firstChild.nodeValue))
-        for i in range(len(DataList)):
-            RenderText.insert(INSERT, "[")
-            RenderText.insert(INSERT, i + 1)
-            RenderText.insert(INSERT, "] ")
-            RenderText.insert(INSERT, DataList[i][3])
-            RenderText.insert(INSERT, "주유소(휴게소)")
-            RenderText.insert(INSERT, "\n")
-            RenderText.insert(INSERT, "디젤 가격: ")
-            RenderText.insert(INSERT, DataList[i][0])
-            RenderText.insert(INSERT, "\n")
-            RenderText.insert(INSERT, "가솔린 가격: ")
-            RenderText.insert(INSERT, DataList[i][1])
-            RenderText.insert(INSERT, "\n")
-            RenderText.insert(INSERT, "LPG 가격: ")
-            RenderText.insert(INSERT, DataList[i][2])
-            RenderText.insert(INSERT, "\n")
-            RenderText.insert(INSERT, "\n\n")
+                DataList.append((subitems[1].firstChild.nodeValue,subitems[2].firstChild.nodeValue,subitems[3].firstChild.nodeValue, subitems[9].firstChild.nodeValue,subitems[7].firstChild.nodeValue))
+        if ClickStr=="":
+            RenderText.insert(INSERT,"주유소 없음")
+        else:
+            for i in range(len(DataList)):
+                if DataList[i][4]==ClickStr:
+                    RenderText.insert(INSERT, "[")
+                    RenderText.insert(INSERT, i + 1)
+                    RenderText.insert(INSERT, "] ")
+                    RenderText.insert(INSERT, DataList[i][3])
+                    RenderText.insert(INSERT, "주유소(휴게소)")
+                    RenderText.insert(INSERT, "\n")
+                    RenderText.insert(INSERT, "디젤 가격: ")
+                    RenderText.insert(INSERT, DataList[i][0])
+                    RenderText.insert(INSERT, "\n")
+                    RenderText.insert(INSERT, "가솔린 가격: ")
+                    RenderText.insert(INSERT, DataList[i][1])
+                    RenderText.insert(INSERT, "\n")
+                    RenderText.insert(INSERT, "LPG 가격: ")
+                    RenderText.insert(INSERT, DataList[i][2])
+                    RenderText.insert(INSERT, "\n")
+                    RenderText.insert(INSERT, "\n\n")
+                    print(DataList)
     RenderText.configure(state='disabled')
 
 

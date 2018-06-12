@@ -3,7 +3,7 @@ from urllib.request import *
 from tkinter import *
 from tkinter import font
 from tkinter import ttk
-import tkinter.messagebox
+from operator import itemgetter
 from xml.dom.minidom import parse, parseString
 g_Tk = Tk()
 g_Tk.title("고속도로 주유소 정보 조회")
@@ -212,22 +212,21 @@ def InitInputLabel():
 def OrderButton():
     global order, orderAscend, orderDescend, diesel, gasoline, lpg, oil
 
-    oil =0
-
+    oil = IntVar()
     MenuFont = font.Font(g_Tk, size=15, weight='bold', family='Consolas')
 
     order = Label(g_Tk, font=MenuFont, text="가격순 정렬", fg="green")
     order.place(x=275, y=115)
 
-    diesel = ttk.Radiobutton(g_Tk, text="디젤", variable=oil, value=0)
-    gasoline = ttk.Radiobutton(g_Tk, text="가솔린", variable=oil, value=1)
-    lpg = ttk.Radiobutton(g_Tk, text="LPG", variable=oil, value=2)
+    diesel = Radiobutton(g_Tk, text="디젤", variable=oil, value=1)
+    gasoline = Radiobutton(g_Tk, text="가솔린", variable=oil, value=2)
+    lpg = Radiobutton(g_Tk, text="LPG", variable=oil, value=3)
     diesel.place(x=250, y=145)
     gasoline.place(x=310, y=145)
     lpg.place(x=375, y=145)
 
-    orderAscend = Button(g_Tk, width=10, height=2, text="오름차순")
-    orderDescend = Button(g_Tk, width=10, height=2, text="내림차순")
+    orderAscend = Button(g_Tk, width=10, height=2, text="오름차순",command = UpSort)
+    orderDescend = Button(g_Tk, width=10, height=2, text="내림차순",command=DownSort)
     orderAscend.place(x=250, y=175)
     orderDescend.place(x=340, y=175)
 
@@ -282,6 +281,101 @@ def Search():
                     print(DataList)
     RenderText.configure(state='disabled')
 
+def UpSort():
+    global DataList,oil
+    RenderText.configure(state='normal')
+    RenderText.delete(0.0, END)
+    if oil.get() == 1:
+        tuple(DataList)
+        DataList.sort(key=itemgetter(0))
+        for i in range(len(DataList)):
+            RenderText.insert(INSERT, "[")
+            RenderText.insert(INSERT, i + 1)
+            RenderText.insert(INSERT, "] ")
+            RenderText.insert(INSERT, DataList[i][3])
+            RenderText.insert(INSERT, "주유소(휴게소)")
+            RenderText.insert(INSERT, "\n")
+            RenderText.insert(INSERT, "디젤 가격: ")
+            RenderText.insert(INSERT, DataList[i][0])
+            RenderText.insert(INSERT, "\n")
+            RenderText.insert(INSERT, "\n\n")
+    elif oil.get()==2:
+        tuple(DataList)
+        DataList.sort(key=itemgetter(1))
+        for i in range(len(DataList)):
+            RenderText.insert(INSERT, "[")
+            RenderText.insert(INSERT, i + 1)
+            RenderText.insert(INSERT, "] ")
+            RenderText.insert(INSERT, DataList[i][3])
+            RenderText.insert(INSERT, "주유소(휴게소)")
+            RenderText.insert(INSERT, "\n")
+            RenderText.insert(INSERT, "가솔린 가격: ")
+            RenderText.insert(INSERT, DataList[i][1])
+            RenderText.insert(INSERT, "\n")
+            RenderText.insert(INSERT, "\n\n")
+    elif oil.get()==3:
+        tuple(DataList)
+        DataList.sort(key=itemgetter(2))
+        for i in range(len(DataList)):
+            RenderText.insert(INSERT, "[")
+            RenderText.insert(INSERT, i + 1)
+            RenderText.insert(INSERT, "] ")
+            RenderText.insert(INSERT, DataList[i][3])
+            RenderText.insert(INSERT, "주유소(휴게소)")
+            RenderText.insert(INSERT, "\n")
+            RenderText.insert(INSERT, "LPG 가격: ")
+            RenderText.insert(INSERT, DataList[i][2])
+            RenderText.insert(INSERT, "\n")
+            RenderText.insert(INSERT, "\n\n")
+    RenderText.configure(state='disabled')
+
+def DownSort():
+    global DataList,oil
+    RenderText.configure(state='normal')
+    RenderText.delete(0.0, END)
+    if oil.get() == 1:
+        tuple(DataList)
+        DataList.sort(reverse=True,key=itemgetter(0))
+        for i in range(len(DataList)):
+            RenderText.insert(INSERT, "[")
+            RenderText.insert(INSERT, i + 1)
+            RenderText.insert(INSERT, "] ")
+            RenderText.insert(INSERT, DataList[i][3])
+            RenderText.insert(INSERT, "주유소(휴게소)")
+            RenderText.insert(INSERT, "\n")
+            RenderText.insert(INSERT, "디젤 가격: ")
+            RenderText.insert(INSERT, DataList[i][0])
+            RenderText.insert(INSERT, "\n")
+            RenderText.insert(INSERT, "\n\n")
+    elif oil.get()==2:
+        tuple(DataList)
+        DataList.sort(reverse=True,key=itemgetter(1))
+        for i in range(len(DataList)):
+            RenderText.insert(INSERT, "[")
+            RenderText.insert(INSERT, i + 1)
+            RenderText.insert(INSERT, "] ")
+            RenderText.insert(INSERT, DataList[i][3])
+            RenderText.insert(INSERT, "주유소(휴게소)")
+            RenderText.insert(INSERT, "\n")
+            RenderText.insert(INSERT, "가솔린 가격: ")
+            RenderText.insert(INSERT, DataList[i][1])
+            RenderText.insert(INSERT, "\n")
+            RenderText.insert(INSERT, "\n\n")
+    elif oil.get()==3:
+        tuple(DataList)
+        DataList.sort(reverse=True,key=itemgetter(2))
+        for i in range(len(DataList)):
+            RenderText.insert(INSERT, "[")
+            RenderText.insert(INSERT, i + 1)
+            RenderText.insert(INSERT, "] ")
+            RenderText.insert(INSERT, DataList[i][3])
+            RenderText.insert(INSERT, "주유소(휴게소)")
+            RenderText.insert(INSERT, "\n")
+            RenderText.insert(INSERT, "LPG 가격: ")
+            RenderText.insert(INSERT, DataList[i][2])
+            RenderText.insert(INSERT, "\n")
+            RenderText.insert(INSERT, "\n\n")
+    RenderText.configure(state='disabled')
 
 def InitRenderText():
     global RenderText

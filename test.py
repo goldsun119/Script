@@ -4,7 +4,8 @@ from tkinter import *
 from tkinter import font
 from tkinter import ttk
 from operator import itemgetter
-from xml.dom.minidom import parse, parseString
+from xml.dom.minidom import parseString
+import spam
 g_Tk = Tk()
 g_Tk.title("고속도로 주유소 정보 조회")
 g_Tk.geometry("530x700")
@@ -77,7 +78,6 @@ def InitRouteBox():
 def Button_Click():
     global r, str
     r = RouteBox.curselection()
-    print(r)
     InitDirec()
 
 def InitDirec():
@@ -230,17 +230,16 @@ def OrderButton():
     orderAscend.place(x=250, y=175)
     orderDescend.place(x=340, y=175)
 
-decode_key = unquote("aTIaQ2xH3YX61QqRvQYCrHyJtrpYj7Omi1vFIfUCIzM4908KtnLBetjsGy99joagT9qF6OdjJK1qDsoOA6xKpw%3D%3D")
+decode_key = unquote(spam.id())
 def Search():
     global str,DataList,RenderText,ClickList
 
     DataList.clear()
     RenderText.configure(state='normal')
     RenderText.delete(0.0, END)
-    print ('codelist_select')
     direction = str.get()
     # direction = '인천'
-    url = 'http://data.ex.co.kr/exopenapi/business/curStateStation'
+    url = spam.url()
     queryParams = '?' + urlencode({ quote_plus('ServiceKey') : decode_key, quote_plus('serviceKey') : '', quote_plus('type') : 'xml', quote_plus('routeName') : '', quote_plus('direction') : direction, quote_plus('numOfRows') : '30', quote_plus('pageNo') : '1' })
     request = Request(url + queryParams)
 
@@ -278,7 +277,6 @@ def Search():
                     RenderText.insert(INSERT, DataList[i][2])
                     RenderText.insert(INSERT, "\n")
                     RenderText.insert(INSERT, "\n\n")
-                    print(DataList)
     RenderText.configure(state='disabled')
 
 def UpSort():

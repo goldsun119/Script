@@ -4,8 +4,13 @@ from tkinter import *
 from tkinter import font
 from tkinter import ttk
 from operator import itemgetter
+import base64
+import smtplib
+from email.mime.text import MIMEText
 from xml.dom.minidom import parseString
 import spam
+
+
 g_Tk = Tk()
 g_Tk.title("고속도로 주유소 정보 조회")
 g_Tk.geometry("530x700")
@@ -76,13 +81,13 @@ def InitRouteBox():
     b.place(x=220,y=50)
 
 def Button_Click():
-    global r, str
+    global r, stri
     r = RouteBox.curselection()
     InitDirec()
 
 def InitDirec():
-    global RouteBox,str,r,ClickStr
-    str = StringVar()
+    global RouteBox,stri,r,ClickStr
+    stri = StringVar()
     ClickStr=""
 
     routeIndex = RouteBox.curselection()
@@ -231,15 +236,20 @@ def OrderButton():
     orderDescend.place(x=340, y=175)
 
 decode_key = unquote(spam.id())
+
 def Search():
-    global str,DataList,RenderText,ClickList
+    global stri,DataList,RenderText,ClickList, mailData
 
     DataList.clear()
     RenderText.configure(state='normal')
     RenderText.delete(0.0, END)
-    direction = str.get()
+    direction = stri.get()
+    mailData = ""
     # direction = '인천'
+
+
     url = spam.url()
+
     queryParams = '?' + urlencode({ quote_plus('ServiceKey') : decode_key, quote_plus('serviceKey') : '', quote_plus('type') : 'xml', quote_plus('routeName') : '', quote_plus('direction') : direction, quote_plus('numOfRows') : '30', quote_plus('pageNo') : '1' })
     request = Request(url + queryParams)
 
@@ -277,6 +287,12 @@ def Search():
                     RenderText.insert(INSERT, DataList[i][2])
                     RenderText.insert(INSERT, "\n")
                     RenderText.insert(INSERT, "\n\n")
+
+                    mailData += DataList[i][3] + "주유소(휴게소)\n" + \
+                                    "디젤 가격: " + DataList[i][0] + "\n" + \
+                                    "가솔린 가격: " + DataList[i][1] + "\n" + \
+                                    "LPG 가격: " + DataList[i][2] + "\n\n"
+
     RenderText.configure(state='disabled')
 
 def UpSort():
@@ -381,9 +397,9 @@ def InitRenderText():
     RenderTextScrollbar.pack()
     RenderTextScrollbar.place(x=375, y=200)
     TempFont = font.Font(g_Tk, size=10, family='Consolas')
-    RenderText = Text(g_Tk, width=49, height=34, borderwidth=12, relief='ridge', yscrollcommand=RenderTextScrollbar.set)
+    RenderText = Text(g_Tk, width=60, height=30, borderwidth=12, relief='ridge', yscrollcommand=RenderTextScrollbar.set)
     RenderText.pack()
-    RenderText.place(x=25, y=220)
+    RenderText.place(x=25, y=280)
     RenderTextScrollbar.config(command=RenderText.yview)
     RenderTextScrollbar.pack(side=RIGHT, fill=BOTH)
     RenderText.configure(state='disabled')
@@ -395,6 +411,55 @@ def InitButton():
     search.pack()
     search.place(x=435, y=95); search["bg"] = "blue"; search["fg"] = "white"
 
+def Base64_Encode(s):
+    return base64.b64encode(s.encode('utf-8'))
+
+def Base64_Decode(b):
+    return base64.b64decode(b).decode('utf-8')
+
+def EmailText():
+    TempFont = font.Font(g_Tk, size=15, weight='bold', family='Consolas')
+    MainText = Label(g_Tk, font=TempFont, text="메일 주소", fg="green")
+    MainText.pack()
+    MainText.place(x=10,y =240)
+
+def SendEmailLabel():
+    global EmailLabel
+    TempFont = font.Font(g_Tk, size=17, weight='bold', family='Consolas')
+    EmailLabel = Entry(g_Tk, font=TempFont, width=23, borderwidth=7, relief='ridge')
+    EmailLabel.pack()
+    EmailLabel.place(x=110, y=230)
+
+def SendEmailButton():
+    TempFont = font.Font(g_Tk, size=12, weight='bold', family='Consolas')
+    MailButton = Button(g_Tk, font=TempFont, text="보내기", command=SendButtonAction)
+    MailButton.pack()
+    MailButton.place(x=435, y=235); MailButton["bg"] = "blue"; MailButton["fg"] = "white"
+
+def SendButtonAction():
+    global EmailLabel
+    global SearchListBox
+    global myLocationBoxData
+    global mailData
+    Mailadd = str(EmailLabel.get())
+    RenderText.configure(state='normal')
+    RenderText.delete(0.0, END)
+    sendMail(Mailadd, mailData)
+    RenderText.configure(state='disabled')
+
+
+def sendMail(ReviceMail, Content):
+    s = smtplib.SMTP("smtp.gmail.com",587) #SMTP 서버 설정
+    s.starttls() #STARTTLS 시작
+    s.login( Base64_Decode("ZHV0bHM1M0BnbWFpbC5jb20="),Base64_Decode("ZHVkZG1zMDAzMQ=="))
+    contents = Content
+    msg = MIMEText(contents, _charset='euc-kr')
+    msg['Subject'] = '고속도로 주유소 정보'
+    msg['From'] = Base64_Decode("ZHV0bHM1M0BnbWFpbC5jb20=")
+    msg['To'] = ReviceMail
+    s.sendmail(Base64_Decode("ZHV0bHM1M0BnbWFpbC5jb20="), ReviceMail, msg.as_string())
+
+
 
 InitRouteBox()
 InitDirec()
@@ -403,4 +468,8 @@ InitInputLabel()
 InitButton()
 InitRenderText()
 OrderButton()
+EmailText()
+SendEmailLabel()
+SendEmailButton()
 g_Tk.mainloop()
+

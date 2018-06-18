@@ -91,7 +91,7 @@ def InitDirec():
     ClickStr=""
 
     routeIndex = RouteBox.curselection()
-    direction = ttk.Combobox(textvariable=str, width=20)
+    direction = ttk.Combobox(textvariable=stri, width=20)
     if 0 in routeIndex:
         direction['value'] = ('광주','대구')
     elif 1 in routeIndex:
